@@ -3,7 +3,7 @@ import Header from './Header';
 import IngridientCard from './IngridientCard';
 import InputField from './InputField';
 import NavigationCard from './NavigationCard';
-import NoDataFoundMessage from './NoDataFoundMessage';
+import ErrorMessage from './ErrorMessage';
 import RecipeCard from './RecipeCard';
 import RecipeModal from './RecipeModal';
 import RecipeSearchAndSelect from './RecipeSearchAndSelect';
@@ -16,7 +16,7 @@ export {
   IngridientCard,
   InputField,
   NavigationCard,
-  NoDataFoundMessage,
+  ErrorMessage,
   RecipeCard,
   RecipeModal,
   RecipeSearchAndSelect,

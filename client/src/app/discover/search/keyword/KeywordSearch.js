@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-nested-ternary */
 import { React, useState, useEffect, useCallback } from 'react';
 import debounce from 'lodash.debounce';
 import Spinner from 'react-bootstrap/Spinner';
-import { InputField, SearchedRecipeCard, Title, NoDataFoundMessage } from '../../../../components';
+import { InputField, SearchedRecipeCard, Title, ErrorMessage } from '../../../../components';
 import { fetchRecipesByKeyword, fetchRandomRecipes } from '../../../../service';
 import './keywordSearch.scss';
 
@@ -12,10 +14,17 @@ function KeywordSearch() {
 
   const [loading, setLoading] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleChange = useCallback(
     debounce(
-      ({ target: { value } }) => setKeyword(value),
-      5000,
+      ({ target: { value } }) => {
+        setKeyword(value);
+        if (errorMessage) {
+          setErrorMessage('');
+        }
+      },
+      1000,
     ),
     [],
   );
@@ -24,13 +33,25 @@ function KeywordSearch() {
     setLoading(true);
     if (keyword) {
       fetchRecipesByKeyword({ keyword })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Something went wrong');
+        })
         .then(({ results }) => setRecipes(results))
+        .catch((error) => setErrorMessage(error.message))
         .finally(() => setLoading(false));
     } else {
       fetchRandomRecipes()
-        .then((response) => response.json())
-        .then(({ recipes: fetchedRecipes }) => setRecipes(fetchedRecipes))
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error('Something went wrong');
+        })
+        .then(({ recipes: fetchedRecipes }) => fetchedRecipes && setRecipes(fetchedRecipes))
+        .catch((error) => setErrorMessage(error.message))
         .finally(() => setLoading(false));
     }
   }, [keyword]);
@@ -53,17 +74,20 @@ function KeywordSearch() {
           )
           : (
             <div className="recipe-cards-container">
-              {recipes.length > 0
-                ? recipes?.map(
-                  (recipe, index) => (
-                    <SearchedRecipeCard
-                      testId={`searched-recipe-card-${index}`}
-                      key={index}
-                      props={recipe}
-                    />
-                  ),
-                )
-                : <NoDataFoundMessage message="No Recipes Found" />}
+              {errorMessage ? (
+                <ErrorMessage message={errorMessage} />
+              )
+                : recipes.length
+                  ? recipes?.map(
+                    (recipe, index) => (
+                      <SearchedRecipeCard
+                        testId={`searched-recipe-card-${index}`}
+                        key={index}
+                        props={recipe}
+                      />
+                    ),
+                  )
+                  : <ErrorMessage message="No recipes found" />}
             </div>
           )
       }

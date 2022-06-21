@@ -6,7 +6,7 @@
 import { React, useState, useCallback, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 import Spinner from 'react-bootstrap/esm/Spinner';
-import { Button, SearchedRecipeCard, IngridientCard, Title, InputField, NoDataFoundMessage } from '../../../../components';
+import { Button, SearchedRecipeCard, IngridientCard, Title, InputField, ErrorMessage } from '../../../../components';
 import { fetchIngredients, fetchRecipesByIngredients } from '../../../../service';
 import './ingredientSearch.scss';
 import '../../../../sharedStyles.scss';
@@ -109,7 +109,7 @@ function IngredientSearch() {
                 selectedIngridient={false}
               />
             ))}
-        {hasInputValue && !ingredients.length && !ingredientsLoading ? <NoDataFoundMessage
+        {hasInputValue && !ingredients.length && !ingredientsLoading ? <ErrorMessage
           testid="no-ingridients-found"
           message="No Ingridients Found"
         /> : null}

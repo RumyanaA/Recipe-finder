@@ -3,7 +3,7 @@ import Spinner from 'react-bootstrap/esm/Spinner';
 import InputField from '../InputField';
 import { apiKey } from '../../config';
 import { useApi, useApiSingleRecipe } from '../../hooks';
-import NoDataFoundMsg from '../NoDataFoundMessage';
+import NoDataFoundMsg from '../ErrorMessage';
 import './RecipeSearchAndSelect.scss';
 
 function RecipeSearchAndSelect({

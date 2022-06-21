@@ -1,11 +1,11 @@
 import React from 'react';
-import './NoDataFoundMessage.scss';
+import './ErrorMessage.scss';
 
-function NoDataFoundMessage({ testid, message }) {
+function ErrorMessage({ testid, message }) {
   return (
     <div data-testid={testid} className="message-container">
       {message}
     </div>
   );
 }
-export default NoDataFoundMessage;
+export default ErrorMessage;

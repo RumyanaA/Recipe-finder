@@ -1,4 +1,7 @@
-import { React, useState } from 'react';
+/* eslint-disable no-nested-ternary */
+import { React, useCallback, useState } from 'react';
+import debounce from 'lodash.debounce';
+import Spinner from 'react-bootstrap/esm/Spinner';
 import { Button, SearchedRecipeCard, Title } from '../../../../components';
 import { fetchRecipesByNutrition } from '../../../../service';
 import './nutritionsSearch.scss';
@@ -11,27 +14,37 @@ function NutritionsSearch() {
     fat: 50,
   });
 
-  const {
-    carbs, protein, calories, fat,
-  } = nutrition;
-
   const [recipes, setRecipes] = useState([]);
+
+  const [recipesLoading, setRecipesLoading] = useState(false);
 
   const handleChange = (name) => ({ target: { value } }) => {
     setNutrition({ ...nutrition, [name]: value });
   };
 
+  const handleDebounce = useCallback(
+    debounce(
+      (nutritions) => {
+        fetchRecipesByNutrition({ ...nutritions })
+          .then((response) => response.json())
+          .then(setRecipes)
+          .finally(setRecipesLoading(false));
+      },
+      1000,
+    ),
+    [],
+  );
+
   const fetchRecipes = () => {
-    fetchRecipesByNutrition({ ...nutrition })
-      .then((response) => response.json())
-      .then(setRecipes);
+    setRecipesLoading(true);
+    handleDebounce(nutrition);
   };
 
   return (
     <>
       <div className="sliders-wrapper">
         <p className="nutrition-value">
-          {carbs}
+          {nutrition.carbs}
           g
         </p>
         <div className="slider-container">
@@ -50,7 +63,7 @@ function NutritionsSearch() {
           />
         </div>
         <p className="nutrition-value">
-          {protein}
+          {nutrition.protein}
           g
         </p>
         <div className="slider-container">
@@ -69,7 +82,7 @@ function NutritionsSearch() {
           />
         </div>
         <p className="nutrition-value">
-          {calories}
+          {nutrition.calories}
           kcal
         </p>
         <div className="slider-container">
@@ -89,7 +102,7 @@ function NutritionsSearch() {
           />
         </div>
         <p className="nutrition-value">
-          {fat}
+          {nutrition.fat}
           g
         </p>
         <div className="slider-container">
@@ -115,23 +128,33 @@ function NutritionsSearch() {
       <Title title="Found Recipes" />
       <div className="recipe-cards-container">
         {
-          recipes.length === 0
-            ? (
-              <div className="ingridients-img-container">
-                <img className="ingridients-img" alt="recipes" src="img/recipes.jpg" />
-              </div>
-            )
-            : null
+          recipes.length && !recipesLoading
+            ? recipes?.map((recipe, index) => (
+              <SearchedRecipeCard
+                testId={`recipe-card-testid-${index}`}
+                key={index}
+                props={recipe}
+              />
+            ))
+            : recipesLoading
+              ? (
+                <div className="spinner-div">
+                  <Spinner
+                    data-testid="ingridients-spinner"
+                    animation="grow"
+                    variant="primary"
+                  />
+                </div>
+              )
+              : recipes.length === 0 && !recipesLoading
+                ? (
+                  <div className="ingridients-img-container">
+                    <img className="ingridients-img" alt="recipes" src="img/recipes.jpg" />
+                  </div>
+                )
+                : null
         }
-        {
-          recipes?.map((recipe, index) => (
-            <SearchedRecipeCard
-              testId={`recipe-card-testid-${index}`}
-              key={index}
-              props={recipe}
-            />
-          ))
-        }
+
       </div>
     </>
   );
