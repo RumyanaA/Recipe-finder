@@ -33,3 +33,17 @@
 .spinner-div {
   margin: 0 auto;
 }
+
+// Tablet
+@media only screen and (max-width: 768px) {
+ .searchInput-Button-container{
+  width: 85%;
+ }
+}
+
+//Mobile
+@media only screen and (max-width: 640px) {
+  .searchInput-Button-container{
+   width: 100%;
+  }
+ }

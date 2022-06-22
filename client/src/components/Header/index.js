@@ -18,7 +18,9 @@ function Header() {
       <h1 onClick={navigateHome} className="app-name">
         {' '}
         <img className="logo" alt={altLogo.toString()} src="img/logo.jpg" />
-        The Taste Council
+        <span className="name">
+          The Taste Council
+        </span>
       </h1>
       <h3 className="user-name">{username}</h3>
     </header>

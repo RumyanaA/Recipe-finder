@@ -10,3 +10,17 @@
     padding: 0.6rem 1.2rem;
     width: 17rem;
 }
+
+// Tablet
+@media only screen and (max-width: 768px) {
+    .primary-button{
+        width: 14rem;
+    }
+  }
+  
+  //Mobile
+  @media only screen and (max-width: 640px) {
+ 
+
+  }
+  

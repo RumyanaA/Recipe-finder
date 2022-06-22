@@ -177,3 +177,45 @@
     }
   }
 }
+
+// Tablet
+@media only screen and (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    height: 80%;
+    top: 80px;
+    left: 50px;
+
+    .item {
+      margin-left: 4rem;
+    }
+    .recipe {
+      .input-buttons-container {
+        .buttons-container {
+          margin-left: 11rem;
+        }
+      }
+    }
+  }
+}
+
+//Mobile
+@media only screen and (max-width: 640px) {
+  .modal-content {
+    width: 80%;
+    height: 80%;
+    top: 80px;
+    left: 50px;
+
+    .item {
+      margin-left: 4rem;
+    }
+    .recipe {
+      .input-buttons-container {
+        .buttons-container {
+          margin-left: 2rem;
+        }
+      }
+    }
+  }
+}
